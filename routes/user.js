@@ -51,15 +51,18 @@ router.get("/find/:id", verifyTokenAndAdmin, async (req, res) => {
     }
 })
 
-//GET ALL USERS 
+//GET ALL USER
 router.get("/", verifyTokenAndAdmin, async (req, res) => {
-    try{
-        const users = await User.find();
-        res.status(200).json(users);
-    } catch(err){
-        response.status(500).json(err);
-    }
-}); 
+  const query = req.query.new;
+  try {
+    const users = query
+      ? await User.find().sort({ _id: -1 }).limit(5)
+      : await User.find();
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+}) 
 
 
 // GET USER STATS 
